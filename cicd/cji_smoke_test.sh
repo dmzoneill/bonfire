@@ -34,6 +34,10 @@ docker pull ${MC_IMAGE}
 
 CJI_NAME="$COMPONENT_NAME"
 
+if [[ -z $IQE_DEBUG ]]; then
+   export IQE_DEBUG="--debug"
+fi
+
 if [[ -z $IQE_CJI_TIMEOUT ]]; then
     echo "Error: no timeout set; export IQE_CJI_TIMEOUT before invoking cji_smoke_test.sh"
     exit 1
@@ -42,7 +46,8 @@ fi
 # Invoke the CJI using the options set via env vars
 set -x
 POD=$(
-    bonfire deploy-iqe-cji $COMPONENT_NAME \
+    bonfire $IQE_DEBUG \ 
+    deploy-iqe-cji $COMPONENT_NAME \
     --marker "$IQE_MARKER_EXPRESSION" \
     --filter "$IQE_FILTER_EXPRESSION" \
     --image-tag "${IQE_IMAGE_TAG}" \
